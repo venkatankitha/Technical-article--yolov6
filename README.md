@@ -1,1 +1,1 @@
-# Technical-article--yolov6
+# Technical-article--yolov11
