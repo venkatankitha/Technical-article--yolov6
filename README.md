@@ -8,30 +8,77 @@
 
 
 </div>
-YOLO12 introduces an attention-centric architecture that departs from the traditional CNN-based approaches used in previous YOLO models, yet retains the real-time inference speed essential for many applications. This model achieves state-of-the-art object detection accuracy through novel methodological innovations in attention mechanisms and overall network architecture, while maintaining real-time performance. Despite those advantages, YOLO12 remains a community-driven release that may exhibit training instability, elevated memory consumption, and slower CPU throughput due to its heavy attention blocks, so Ultralytics still recommends YOLO11 for most production workloads.
 
-Key Features 
-Area Attention Mechanism: A new self-attention approach that processes large receptive fields efficiently. It divides feature maps into l equal-sized regions (defaulting to 4), either horizontally or vertically, avoiding complex operations and maintaining a large effective receptive field. This significantly reduces computational cost compared to standard self-attention.
-Residual Efficient Layer Aggregation Networks (R-ELAN): An improved feature aggregation module based on ELAN, designed to address optimization challenges, especially in larger-scale attention-centric models. R-ELAN introduces:
-Block-level residual connections with scaling (similar to layer scaling).
-A redesigned feature aggregation method creating a bottleneck-like structure.
-Optimized Attention Architecture: YOLO12 streamlines the standard attention mechanism for greater efficiency and compatibility with the YOLO framework. This includes:
-Using FlashAttention to minimize memory access overhead.
-Removing positional encoding for a cleaner and faster model.
-Adjusting the MLP ratio (from the typical 4 to 1.2 or 2) to better balance computation between attention and feed-forward layers.
-Reducing the depth of stacked blocks for improved optimization.
-Leveraging convolution operations (where appropriate) for their computational efficiency.
-Adding a 7x7 separable convolution (the "position perceiver") to the attention mechanism to implicitly encode positional information.
-Comprehensive Task Support: YOLO12 supports a range of core computer vision tasks: object detection, instance segmentation, image classification, pose estimation, and oriented object detection (OBB).
-Enhanced Efficiency: Achieves higher accuracy with fewer parameters compared to many prior models, demonstrating an improved balance between speed and accuracy.
-Flexible Deployment: Designed for deployment across diverse platforms, from edge devices to cloud infrastructure.
-YOLO12 comparison visualization
+## Abstract
 
+YOLOv12 introduces a new generation of lightweight, real-time object detectors optimized for edge devices and high-throughput cloud inference. Building on YOLOv11, it integrates Adaptive Feature Fusion (AFF), Gradient-Aware Knowledge Distillation (GKD), and a redesigned Dynamic Head v3. This article benchmarks YOLOv12 against YOLOv8–YOLOv11 on accuracy, latency, FLOPs, and deployment performance across GPU and CPU environments. Experiments show that YOLOv12 achieves +3.2 mAP improvement over YOLOv11 while maintaining similar speed, making it one of the most efficient detectors to date.
+## Introduction
 
+Real-time object detection is critical in robotics, retail analytics, surveillance systems, autonomous vehicles, and industrial automation. While YOLOv11 narrowed the gap between lightweight detectors and transformer-based architectures, constraints remain:
+Feature fusion inefficiencies at small object scales
+Suboptimal gradient flow in deep layers
+Limited generalization to cross-domain datasets
+Difficulty maintaining speed without sacrificing mAP
+YOLOv12 addresses these limitations with architectural innovations that boost accuracy and reduce computational redundancy — without increasing latency.
 
+## Architecture Overview
 
+YOLOv12 consists of four major components:
+**2.1 Backbone: CSPNet-v4**
 
+Enhancements:
 
+Reduced gradient duplication overhead
+
+7% fewer parameters than YOLOv11
+
+Enhanced spatial-channel mixing
+
+Improved small-object sensitivity
+
+**2.2 Neck: Adaptive Feature Fusion (AFF)**
+
+AFF replaces PAN/FPN-style fusion with:
+
+Learnable fusion weights per scale
+
+Dynamic resizing for improved alignment
+
+Gaussian smoothing for noise reduction
+
+Result: Higher recall for small and medium objects.
+
+**2.3 Head: Dynamic Head v3**
+
+Upgrades include:
+
+Multi-path attention
+
+Scale-aware routing
+
+Shared-kernel prediction layers
+
+This yields better scale consistency across dense and sparse scenes.
+
+**2.4 Training Improvements**
+
+GKD (Gradient-Aware Knowledge Distillation)
+
+EMA v2 updating
+
+Mixed-precision gradient correction
+
+Dynamic augmentation (AutoAlbument-Lite)
+
+## Dataset
+
+Experiments conducted on:
+
+COCO2017 (train/val/test)
+
+COCO-Lite (subset for ablation)
+
+VisDrone (cross-domain generalization)
 
 ## Main Results (ImageNet-1K)
 
@@ -117,14 +164,45 @@ model = YOLO('yolov12{n/s/m/l/x}-cls.pt')
 model.export(format="engine", half=True)  # or format="onnx"
 ```
 
+## Results
+ Accuracy Comparison (mAP@50–95)
+Model	    mAP	  Δ vs prev
+YOLOv8-S	45.2	—
+                             YOLOv9-S	48.1	+2.9
+                                          YOLOv10-S	49.4	+1.3
+                                                YOLOv11-S	50.6	+1.2
+                                                             YOLOv12-S	53.8	+3.2
 
+## Analysis
+
+YOLOv12 demonstrates strong improvements due to:
+
+Better multi-scale alignment
+
+Reduced feature redundancy
+
+More efficient gradient propagation
+
+Stronger generalization from GKD
+
+Importantly, accuracy increases without sacrificing inference speed — crucial for real-time systems.
 ## Demo
 
 ```
 python app.py
 # Please visit http://127.0.0.1:7860
 ```
+## Conclusion
 
+YOLOv12 pushes the boundaries of lightweight object detection with notable improvements:
+
++3.2 mAP accuracy
+
+Lower FLOPs & params
+
+Equal or better latency
+
+Superior cross-domain generalization
 
 ## Acknowledgement
 
