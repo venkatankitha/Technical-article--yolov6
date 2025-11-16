@@ -5,3 +5,8 @@ numpy
 matplotlib
 tqdm
 onnxruntime
+
+Turing GPUs (e.g., T4, Quadro RTX series)
+Ampere GPUs (e.g., RTX30 series, A30/40/100)
+Ada Lovelace GPUs (e.g., RTX40 series)
+Hopper GPUs (e.g., H100/H200)
