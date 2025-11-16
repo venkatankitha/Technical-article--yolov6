@@ -8,6 +8,30 @@
 
 
 </div>
+YOLO12 introduces an attention-centric architecture that departs from the traditional CNN-based approaches used in previous YOLO models, yet retains the real-time inference speed essential for many applications. This model achieves state-of-the-art object detection accuracy through novel methodological innovations in attention mechanisms and overall network architecture, while maintaining real-time performance. Despite those advantages, YOLO12 remains a community-driven release that may exhibit training instability, elevated memory consumption, and slower CPU throughput due to its heavy attention blocks, so Ultralytics still recommends YOLO11 for most production workloads.
+
+Key Features 
+Area Attention Mechanism: A new self-attention approach that processes large receptive fields efficiently. It divides feature maps into l equal-sized regions (defaulting to 4), either horizontally or vertically, avoiding complex operations and maintaining a large effective receptive field. This significantly reduces computational cost compared to standard self-attention.
+Residual Efficient Layer Aggregation Networks (R-ELAN): An improved feature aggregation module based on ELAN, designed to address optimization challenges, especially in larger-scale attention-centric models. R-ELAN introduces:
+Block-level residual connections with scaling (similar to layer scaling).
+A redesigned feature aggregation method creating a bottleneck-like structure.
+Optimized Attention Architecture: YOLO12 streamlines the standard attention mechanism for greater efficiency and compatibility with the YOLO framework. This includes:
+Using FlashAttention to minimize memory access overhead.
+Removing positional encoding for a cleaner and faster model.
+Adjusting the MLP ratio (from the typical 4 to 1.2 or 2) to better balance computation between attention and feed-forward layers.
+Reducing the depth of stacked blocks for improved optimization.
+Leveraging convolution operations (where appropriate) for their computational efficiency.
+Adding a 7x7 separable convolution (the "position perceiver") to the attention mechanism to implicitly encode positional information.
+Comprehensive Task Support: YOLO12 supports a range of core computer vision tasks: object detection, instance segmentation, image classification, pose estimation, and oriented object detection (OBB).
+Enhanced Efficiency: Achieves higher accuracy with fewer parameters compared to many prior models, demonstrating an improved balance between speed and accuracy.
+Flexible Deployment: Designed for deployment across diverse platforms, from edge devices to cloud infrastructure.
+YOLO12 comparison visualization
+
+
+
+
+
+
 
 ## Main Results (ImageNet-1K)
 
